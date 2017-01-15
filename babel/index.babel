@@ -1,0 +1,131 @@
+// REACT JS SCORE BOARD APP
+
+// declare variables to be used in httprequest and react code
+var myRecentJson;
+var myAllTimeJson;
+var myData;
+
+var usernameArray,  allTimeUserNameArray;
+var recentScore,    allTimeScore;
+var userImg,        allTimeUserImg;
+
+//get json for scoreboard
+var httpRequest = new XMLHttpRequest()
+
+httpRequest.onreadystatechange = getScores;
+
+httpRequest.open('GET', 'https://fcctop100.herokuapp.com/api/fccusers/top/recent', true);
+httpRequest.send(null);
+
+function getScores(data) {
+  if (httpRequest.readyState === XMLHttpRequest.DONE) {
+    myData = data.currentTarget.response;
+    myRecentJson = JSON.parse(myData);
+    
+    // arrays organized by recent score
+    usernameArray = myRecentJson.map((x) => x.username);
+    recentScore = myRecentJson.map((x) => x.recent);
+    userImg = myRecentJson.map((x) => x.img);
+    
+    
+    // JSON object organized by highest all time score
+    myAllTimeJson = myRecentJson.sort(function(a,b){
+      return b.alltime - a.alltime
+    });
+    
+    // arrays organized by all time score
+    allTimeUserNameArray = myAllTimeJson.map((x) => x.username);
+    allTimeScore = myAllTimeJson.map((x) => x.alltime);
+    allTimeUserImg = myAllTimeJson.map((x) => x.img);
+    
+    // call react code to render and display arrays
+    reactJScode();
+    
+  } else {
+    reactJScode(); // call react code to display 'loading'
+  }
+}
+
+
+function reactJScode() {
+  
+  class ScoreBoard extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {sortByAllTime : false}
+      this.toggleList = this.toggleList.bind(this);
+    }
+    
+    // create JSX elements from recent arrays to be rendered
+    createRecentList() {
+      var listArr = [];
+      for (var i = 0; i < 100; i++){
+        
+        listArr.push(<div class="container"><li key={usernameArray[i]} className="user-list"><img src={userImg[i]} className="user-img" /><h3 className="user-name">{usernameArray[i]}</h3><p className="user-score"><a href={'https://www.freecodecamp.com/' + usernameArray[i]} target="_blank">{recentScore[i]}</a></p></li></div>)
+      }
+
+      return listArr;
+    }
+    
+    // create JSX elements from all time arrays to be rendered
+    createAllTimeList() {
+      var listArr = [];
+      for(var i = 0; i < 100; i++){
+        listArr.push(<li key={allTimeUserNameArray[i]} className="user-list"><img src={allTimeUserImg[i]} className="user-img" /><h3 className="user-name">{allTimeUserNameArray[i]}</h3><p className="user-score"><a href={'https://www.freecodecamp.com/' + allTimeUserNameArray[i]} target="_blank">{allTimeScore[i]}</a></p></li>)
+      }
+      
+      return listArr;
+    }
+    
+    // change state to display list of all time vs recent scores
+    toggleList() {
+      this.setState((prevState) => ({
+        sortByAllTime : !prevState.sortByAllTime
+      }));
+    }
+    
+    //based on conditions, render appropriate elements 
+    render() {
+      if (myData == '') { //error in connection
+        
+        return (
+          <div>
+            <p>Something went wrong, please check your connection!</p>
+          </div>
+        )
+        
+      } else if(myData == undefined){ // waiting on http request update
+        return(
+          <div className='center'>
+            <h4>Leaderboard loading</h4>
+          </div>
+        )
+        
+      } else if (this.state.sortByAllTime === false) { // display recent scores based on state
+        return (
+          <div>
+            <button onClick={this.toggleList}>Recent Score</button>
+            <ol>{this.createRecentList()}</ol>
+          </div>
+        )
+        
+      } else if (this.state.sortByAllTime === true) { // display all time scores based on state
+        return (
+          <div>
+            <button onClick={this.toggleList}>All Time</button>
+            <ol>{this.createAllTimeList()}</ol>
+          </div>
+        )
+      }
+     }
+    } 
+  
+    ReactDOM.render (
+    <ScoreBoard />,
+    document.getElementById('root')
+  );
+
+}
+
+
+  

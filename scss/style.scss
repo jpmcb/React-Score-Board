@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css?family=Overpass');
+
+$freecodecampGreen: #005902;
+
+#header {
+  text-align: center;
+}
+
+#credits {
+  text-align: center;
+  margin-top: -25px;
+  margin-bottom: 20px;
+}
+
+body {
+  background: #4b5b4b;
+  font-family: 'Overpass', sans-serif;
+  
+  h3 {
+    font-size: 1.6em;
+  }
+  
+  a {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+  
+  a:hover {
+    color: #02f20a;
+    text-decoration: underline;
+  }
+}
+
+button {
+  display: block;
+  margin: 0 auto;
+  width: 20%;
+  height: 30px;
+  border-radius: 10px 10px 10px;
+  color: white;
+  background: $freecodecampGreen;
+}
+
+.user-list {
+  border: solid;
+  border-radius: 5px 5px 5px;
+  margin: 5px auto;
+  box-shadow: 1px 1px 1px;
+  background: $freecodecampGreen;
+  width: 550px;
+}
+
+.user-img {
+  display: inline-block;
+  border: solid;
+  border-radius: 5px 5px 5px;
+  height: 50px;
+  width: 50px;
+  margin-left: 35px;
+  margin-top: 5px;
+  margin-bottom: -20px;
+}
+
+.user-name {
+  display: inline-block;
+  margin-left: 15%;
+  color: white;
+}
+
+.user-score {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.center {
+  text-align: center;
+}
